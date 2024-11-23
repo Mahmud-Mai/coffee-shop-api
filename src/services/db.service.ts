@@ -12,6 +12,7 @@ export const findUserByUsername = (username: string): User | undefined =>
   users.find((user) => user.username === username);
 
 export const addUser = (user: User): void => {
+  user.role = user.role || "user";
   users.push(user);
 };
 
