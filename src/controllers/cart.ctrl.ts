@@ -1,9 +1,12 @@
+import { v4 as uuidv4 } from "uuid";
 import { Request, Response } from "express";
 import {
   getCartByUserId,
   createCart,
-  updateCart
+  updateCart,
+  createOrder
 } from "../services/db.service";
+import { Order, OrderItem } from "../models/order.model";
 
 export const getCart = (req: Request, res: string | any) => {
   const userId = (req as any).user.id;
@@ -36,7 +39,12 @@ export const addToCart = (req: Request, res: string | any) => {
   if (existingItem) {
     existingItem.quantity += quantity;
   } else {
-    cart.items.push({ productId, quantity });
+    cart.items.push({
+      productId,
+      quantity,
+      name: undefined,
+      price: undefined
+    });
   }
 
   updateCart(userId, cart);
@@ -62,6 +70,23 @@ export const removeFromCart = (req: Request, res: string | any) => {
   return res.status(200).json(cart);
 };
 
+// export const checkout = (req: Request, res: string | any) => {
+//   const userId = (req as any).user.id;
+
+//   const cart = getCartByUserId(userId);
+//   if (!cart || cart.items.length === 0) {
+//     return res
+//       .status(400)
+//       .json({ message: "Cart is empty. Cannot proceed to checkout." });
+//   }
+
+//   // For demo purposes, I'm just clearing the cart and returning a success message
+//   cart.items = [];
+//   updateCart(userId, cart);
+
+//   return res.status(200).json({ message: "Checkout successful.", cart });
+// };
+
 export const checkout = (req: Request, res: string | any) => {
   const userId = (req as any).user.id;
 
@@ -72,9 +97,36 @@ export const checkout = (req: Request, res: string | any) => {
       .json({ message: "Cart is empty. Cannot proceed to checkout." });
   }
 
-  // For demo purposes, I'm just clearing the cart and returning a success message
+  // Create order items from cart items
+  const orderItems: OrderItem[] = cart.items.map((item) => ({
+    productId: item.productId,
+    name: item.name,
+    price: item.price,
+    quantity: item.quantity
+  }));
+
+  const total = orderItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  // Create a new order
+  const newOrder: Order = {
+    id: uuidv4(),
+    userId,
+    items: orderItems,
+    total,
+    status: "pending",
+    createdAt: new Date()
+  };
+
+  createOrder(newOrder);
+
+  // Clear the cart after checkout
   cart.items = [];
   updateCart(userId, cart);
 
-  return res.status(200).json({ message: "Checkout successful.", cart });
+  return res
+    .status(200)
+    .json({ message: "Checkout successful.", order: newOrder });
 };
