@@ -1,8 +1,17 @@
-import { Request, Response } from "express";
+import { Request } from "express";
 import bcrypt from "bcryptjs";
-import { findUserByUsername, addUser } from "../services/db.service";
+import {
+  findUserByUsername,
+  addUser,
+  getAllUsers
+} from "../services/db.service";
 import { v4 as uuidv4 } from "uuid";
 import { generateToken } from "../utils/validators.utils";
+
+export const AllUsers = (req: Request, res: string | any) => {
+  const AllUsers = getAllUsers();
+  res.status(200).json(AllUsers);
+};
 
 export const register = async (req: Request, res: string | any) => {
   const { username, password, role } = req.body;

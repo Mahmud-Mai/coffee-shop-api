@@ -17,20 +17,20 @@ router.get("/coffees/:id", getCoffee);
 // Admin endpoints
 router.post(
   "/admin/coffees",
-  // authenticate,
-  // authorize("admin"),
+  authenticate,
+  authorize("admin"),
   addCoffeeProduct
 );
 router.put(
   "/admin/coffees/:id",
-  // authenticate,
-  // authorize("admin"),
+  authenticate,
+  authorize("admin"),
   updateCoffeeProduct
 );
 router.delete(
   "/admin/coffees/:id",
-  // authenticate,
-  // authorize("admin"),
+  authenticate,
+  authorize("admin"),
   deleteCoffeeProduct
 );
 

@@ -3,10 +3,11 @@ import { verifyToken } from "../utils/validators.utils";
 
 export const authenticate = (
   req: Request,
-  res: Response,
+  res: string | any,
   next: NextFunction
 ) => {
   const token = req.headers.authorization?.split(" ")[1];
+  console.log("🚀 ~ AllUsers ~ userId:", (req as any).user.id);
 
   if (!token) {
     return res.status(401).json({ message: "Unauthorized." });
@@ -22,7 +23,7 @@ export const authenticate = (
 };
 
 export const authorize = (role: "admin") => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request, res: string | any, next: NextFunction) => {
     const user = (req as any).user;
 
     if (user.role !== role) {

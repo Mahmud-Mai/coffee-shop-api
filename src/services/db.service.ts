@@ -1,5 +1,5 @@
 import { Payment, PaymentStatus } from "../models/payment.model";
-import { Cart, CartItem } from "../models/cart.model";
+import { Cart } from "../models/cart.model";
 import { Coffee } from "../models/coffee.model";
 import { Order, OrderStatus } from "../models/order.model";
 import { User } from "../models/user.model";
@@ -14,6 +14,7 @@ const payments: Payment[] = [];
 /**
  * User-related operations
  */
+export const getAllUsers = (): User[] => users;
 export const findUserByUsername = (username: string): User | undefined =>
   users.find((user) => user.username === username);
 

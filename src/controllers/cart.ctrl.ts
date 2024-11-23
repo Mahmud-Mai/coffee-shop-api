@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { Request, Response } from "express";
+import { Request } from "express";
 import {
   getCartByUserId,
   createCart,
@@ -21,12 +21,10 @@ export const getCart = (req: Request, res: string | any) => {
 
 export const addToCart = (req: Request, res: string | any) => {
   const userId = (req as any).user.id;
-  const { productId, quantity } = req.body;
+  const { productId, quantity, name, price } = req.body;
 
-  if (!productId || !quantity) {
-    return res
-      .status(400)
-      .json({ message: "Product ID and quantity are required." });
+  if (!name || !price || !productId || !quantity) {
+    return res.status(400).json({ message: "Missing required fields." });
   }
 
   let cart = getCartByUserId(userId);
@@ -42,8 +40,8 @@ export const addToCart = (req: Request, res: string | any) => {
     cart.items.push({
       productId,
       quantity,
-      name: undefined,
-      price: undefined
+      name,
+      price
     });
   }
 
@@ -69,23 +67,6 @@ export const removeFromCart = (req: Request, res: string | any) => {
 
   return res.status(200).json(cart);
 };
-
-// export const checkout = (req: Request, res: string | any) => {
-//   const userId = (req as any).user.id;
-
-//   const cart = getCartByUserId(userId);
-//   if (!cart || cart.items.length === 0) {
-//     return res
-//       .status(400)
-//       .json({ message: "Cart is empty. Cannot proceed to checkout." });
-//   }
-
-//   // For demo purposes, I'm just clearing the cart and returning a success message
-//   cart.items = [];
-//   updateCart(userId, cart);
-
-//   return res.status(200).json({ message: "Checkout successful.", cart });
-// };
 
 export const checkout = (req: Request, res: string | any) => {
   const userId = (req as any).user.id;
