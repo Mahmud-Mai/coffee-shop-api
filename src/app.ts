@@ -1,13 +1,13 @@
 import express from "express";
 import bodyParser from "body-parser";
 import authRoutes from "./routes/auth.routes";
+import cartRoutes from "./routes/cart.routes";
 
 const app = express();
 
-// Middleware
 app.use(bodyParser.json());
 
-// Routes
 app.use("/auth", authRoutes);
+app.use("/cart", cartRoutes);
 
 export default app;
