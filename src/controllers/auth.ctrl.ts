@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { generateToken } from "../utils/validators.utils";
 
 export const register = async (req: Request, res: string | any) => {
-  const { username, password } = req.body;
+  const { username, password, role } = req.body;
 
   if (!username || !password) {
     return res
@@ -18,7 +18,12 @@ export const register = async (req: Request, res: string | any) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = { id: uuidv4(), username, password: hashedPassword };
+  const newUser = {
+    id: uuidv4(),
+    username,
+    password: hashedPassword,
+    role: role ? role : "user"
+  };
 
   addUser(newUser);
 

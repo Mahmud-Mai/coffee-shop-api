@@ -1,0 +1,21 @@
+GET /coffees:
+
+Response: List of all coffee products.
+GET /coffees/:id:
+
+Response: Details of a specific coffee product.
+POST /admin/coffees (Admin only):
+{
+  "name": "Espresso",
+  "description": "Rich and bold coffee shot.",
+  "price": 2.5,
+  "imageUrl": "http://example.com/espresso.jpg"
+}
+
+PUT /admin/coffees/:id (Admin only):
+
+Body: Partial update allowed (e.g., { "price": 3.0 }).
+Response: Updated coffee product.
+DELETE /admin/coffees/:id (Admin only):
+
+Response: Confirmation of deletion.
